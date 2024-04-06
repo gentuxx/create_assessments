@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import org.controlsfx.control.CheckComboBox?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#onKeyPressed" prefHeight="259.0" prefWidth="415.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pimms.createassessment.HelloController">
+   <children>
+      <MenuBar prefHeight="28.0" prefWidth="415.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+        <menus>
+          <Menu mnemonicParsing="false" text="Fichier">
+            <items>
+              <MenuItem mnemonicParsing="false" onAction="#onMenuItemExit" text="Quitter" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Edition">
+            <items>
+                  <MenuItem fx:id="menuItemSubjects" mnemonicParsing="false" onAction="#onMenuItemSubjects" text="Gérer les thématiques et les questions" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Aide">
+            <items>
+              <MenuItem mnemonicParsing="false" onAction="#onMenuItemHelp" text="A propos" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+      <Label layoutX="32.0" layoutY="66.0" text="Nom" />
+      <Label layoutX="31.0" layoutY="103.0" text="Prénom" />
+      <TextField fx:id="tfLastname" layoutX="99.0" layoutY="62.0" prefHeight="27.0" prefWidth="228.0" />
+      <TextField fx:id="tfFirstname" layoutX="99.0" layoutY="99.0" prefHeight="27.0" prefWidth="228.0" />
+      <CheckComboBox fx:id="checkComboBox" layoutX="99.0" layoutY="136.0" prefHeight="28.0" prefWidth="228.0" />
+      <Button fx:id="btnGenerate" layoutX="142.0" layoutY="204.0" mnemonicParsing="false" onAction="#onGenerateButtonClick" text="Générer l'évaluation" />
+   </children>
+</AnchorPane>

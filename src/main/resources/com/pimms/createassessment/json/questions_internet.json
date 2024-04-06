@@ -1,0 +1,63 @@
+{
+    "questions":
+    [
+        {
+            "question": "Quel logiciel n'est pas un traitement de texte ?",
+            "answers":
+            [
+                "Libre Office",
+                "Open Office",
+                "Microsoft Word",
+                "Google Chrome"
+            ]
+        },
+        {
+            "question": "Quelle adresse e-mail est correcte ?",
+            "answers":
+            [
+                "emile.zola.yahoo.fr",
+                "jean-michel.morel@free.fr",
+                "bob.morane@gmail.com",
+                "thierry.dup@nt@orange.fr"
+            ]
+        },
+        {
+            "question": "Comment suis-je informé qu'un message contient une pièce jointe ?",
+            "answers":
+            [
+                "Le message apparaît en gras",
+                "Une trompette est affichée sur la ligne du message",
+                "Une icône de trombone apparaît sur la ligne du message"
+            ]
+        },
+        {
+            "question": "Quel logiciel n'est pas un traitement de texte ?",
+            "answers":
+            [
+                "Libre Office",
+                "Open Office",
+                "Microsoft Word",
+                "Google Chrome"
+            ]
+        },
+        {
+            "question": "Quelle adresse e-mail est correcte ?",
+            "answers":
+            [
+                "emile.zola.yahoo.fr",
+                "jean-michel.morel@free.fr",
+                "bob.morane@gmail.com",
+                "thierry.dup@nt@orange.fr"
+            ]
+        },
+        {
+            "question": "Comment suis-je informé qu'un message contient une pièce jointe ?",
+            "answers":
+            [
+                "Le message apparaît en gras",
+                "Une trompette est affichée sur la ligne du message",
+                "Une icône de trombone apparaît sur la ligne du message"
+            ]
+        }
+    ]
+}
