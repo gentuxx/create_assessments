@@ -119,8 +119,7 @@ public class JsonUtil {
             String jsonName = subject.toLowerCase();
             jsonName = jsonName.replaceAll("\s", "_");
 
-            //System.out.println(String.valueOf(JsonUtil.class.getResource("json/subjects.json")));
-            String jsonPath = String.valueOf(GeneratorEngine.class.getResource("json/"));
+            String jsonPath = String.valueOf(GeneratorEngine.class.getResource("json/").getFile());
             System.out.println(jsonPath + jsonName + ".json");
 
             File file = new File(jsonPath + jsonName + ".json");
