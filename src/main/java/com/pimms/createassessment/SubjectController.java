@@ -58,7 +58,11 @@ public class SubjectController {
     }
 
     private void initializeUI() {
-
+        if (_windowMode == WindowMode.CREATION) {
+            _stage.setTitle("Ajout d'une thématique");
+        } else if (_windowMode == WindowMode.MODIFICATION) {
+            _stage.setTitle("Modification d'une thématique");
+        }
     }
 
 

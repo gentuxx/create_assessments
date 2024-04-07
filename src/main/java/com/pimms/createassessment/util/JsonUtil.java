@@ -16,8 +16,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.SystemUtils;
-
 public class JsonUtil {
     public static List<Subject> getSubjectsFromJsonFile() {
 
@@ -153,12 +151,6 @@ public class JsonUtil {
             return false;
         }
 
-        /*
-        if (SystemUtils.IS_OS_WINDOWS) {
-            System.out.println("Windows");
-        } else if (SystemUtils.IS_OS_LINUX) {
-            System.out.println("Linux");
-        }*/
         System.out.println(subjectToRename);
         System.out.println(newSubjectName);
 
