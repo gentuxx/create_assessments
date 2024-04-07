@@ -1,5 +1,6 @@
 package com.pimms.createassessment.util;
 
+import java.net.URI;
 import java.nio.file.*;
 import com.pimms.createassessment.*;
 import com.pimms.createassessment.models.Subject;
@@ -15,6 +16,8 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.SystemUtils;
+
 public class JsonUtil {
     public static List<Subject> getSubjectsFromJsonFile() {
 
@@ -22,8 +25,10 @@ public class JsonUtil {
         List<Subject> subjects = new ArrayList<Subject>();
 
         try {
-            String file = Subjects.class.getResource("json/subjects.json").getFile();
-            Path path = Path.of(file);
+            URI uri = ClassLoader.getSystemResource("com/pimms/createassessment/").toURI();
+            String mainPath = Paths.get(uri).toString();
+            Path path = Paths.get(mainPath ,"json/subjects.json");
+
             String json = Files.readString(path);
 
             Object obj = parser.parse(json);
@@ -59,9 +64,15 @@ public class JsonUtil {
         JSONParser parser = new JSONParser();
 
         try {
-            String file = Subjects.class.getResource("json/subjects.json").getFile();
-            Path path = Path.of(file);
-            String json = Files.readString(path);
+            URI uri = ClassLoader.getSystemResource("com/pimms/createassessment/").toURI();
+            String mainPath = Paths.get(uri).toString();
+            Path filePath = Paths.get(mainPath ,"json/questions_"
+                    + subject.replaceAll("\s", "_") + ".json");
+
+            Files.deleteIfExists(filePath);
+
+            Path subjectPath = Paths.get(mainPath ,"json/subjects.json");
+            String json = Files.readString(subjectPath);
 
             Object obj = parser.parse(json);
 
@@ -88,11 +99,16 @@ public class JsonUtil {
 
         try {
             // Creating the json file
-            // TODO : Check if it does'nt exist
-            createJsonFile(subject);
+            // TODO : Check if it doesn't exist
+            if (subject.isBlank() || !createJsonFile(subject)) {
+                // TODO
+                return false;
+            }
 
-            String file = Subjects.class.getResource("json/subjects.json").getFile();
-            Path path = Path.of(file);
+            URI uri = ClassLoader.getSystemResource("com/pimms/createassessment/").toURI();
+            String mainPath = Paths.get(uri).toString();
+            Path path = Paths.get(mainPath ,"json/subjects.json");
+
             String json = Files.readString(path);
 
             Object obj = parser.parse(json);
@@ -120,13 +136,32 @@ public class JsonUtil {
             jsonName = jsonName.replaceAll("\s", "_");
 
             String jsonPath = String.valueOf(GeneratorEngine.class.getResource("json/").getFile());
-            System.out.println(jsonPath + jsonName + ".json");
 
-            File file = new File(jsonPath + jsonName + ".json");
-            file.createNewFile();
+            File file = new File(jsonPath + "questions_" + jsonName + ".json");
+            if (!file.createNewFile()) {
+                // TODO
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        return true;
+    }
+
+    public static boolean modifySubject(String subjectToRename, String newSubjectName) {
+
+        if (newSubjectName.isBlank()) {
+            return false;
+        }
+
+        /*
+        if (SystemUtils.IS_OS_WINDOWS) {
+            System.out.println("Windows");
+        } else if (SystemUtils.IS_OS_LINUX) {
+            System.out.println("Linux");
+        }*/
+        System.out.println(subjectToRename);
+        System.out.println(newSubjectName);
+
         return true;
     }
 }

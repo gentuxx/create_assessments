@@ -4,10 +4,10 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="149.0" prefWidth="512.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pimms.createassessment.ConfirmController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="130.0" prefWidth="297.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pimms.createassessment.ConfirmController">
    <children>
-      <Label fx:id="libText" layoutX="127.0" layoutY="27.0" prefHeight="57.0" prefWidth="370.0" text="Libellé" />
-      <Button fx:id="btnCancel" layoutX="216.0" layoutY="153.0" mnemonicParsing="false" onAction="#onCancelButtonClick" text="Annuler" AnchorPane.bottomAnchor="13.272727272727273" AnchorPane.rightAnchor="140.63636363636363" />
-      <Button fx:id="btnConfirm" layoutX="298.0" layoutY="153.0" mnemonicParsing="false" onAction="#onValidateButtonClick" text="Valider" AnchorPane.bottomAnchor="13.090909090909086" AnchorPane.rightAnchor="63.72727272727273" />
+      <Label fx:id="libText" layoutX="13.0" layoutY="15.0" prefHeight="69.0" prefWidth="271.0" text="Libellé" />
+      <Button fx:id="btnCancel" layoutX="98.0" layoutY="93.0" mnemonicParsing="false" onAction="#onCancelButtonClick" text="Annuler" AnchorPane.bottomAnchor="12.0" AnchorPane.rightAnchor="141.0" />
+      <Button fx:id="btnConfirm" layoutX="180.0" layoutY="93.0" mnemonicParsing="false" onAction="#onValidateButtonClick" text="Valider" AnchorPane.bottomAnchor="12.0" AnchorPane.rightAnchor="64.0" />
    </children>
 </AnchorPane>

@@ -65,13 +65,12 @@ public class SubjectsController {
     @FXML
     void onMouseClicked(javafx.scene.input.MouseEvent event) throws IOException {
         if (event.getClickCount() == 2) {
-            openSubjectWindow(WindowMode.MODIFICATION);
+            modifySubjectWindow();
         }
     }
 
     @FXML
     void onAddButtonClick(ActionEvent event) throws IOException {
-        //openSubjectWindow(WindowMode.CREATION);
         boolean resultWindow = false;
 
         FXMLLoader fxmlLoader = new FXMLLoader(SubjectsController.class.getResource("subject-view.fxml"));
@@ -80,6 +79,7 @@ public class SubjectsController {
             scene = new Scene(fxmlLoader.load());
 
             SubjectController controller = fxmlLoader.<SubjectController>getController();
+            controller.setMode(WindowMode.CREATION);
 
             Stage stage = new Stage();
 
@@ -99,7 +99,7 @@ public class SubjectsController {
 
     @FXML
     void onModifyButtonClick(ActionEvent event) {
-        openSubjectWindow(WindowMode.MODIFICATION);
+        modifySubjectWindow();
     }
 
     @FXML
@@ -208,6 +208,40 @@ public class SubjectsController {
             // Reloading the users table
             fillTableViewSubjects();
         } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void modifySubjectWindow() {
+        boolean resultWindow = false;
+
+        if (_tableViewSubjects.getSelectionModel().getSelectedItem() == null) {
+            return;
+        }
+
+        FXMLLoader fxmlLoader = new FXMLLoader(SubjectsController.class.getResource("subject-view.fxml"));
+        Scene scene = null;
+        try {
+            scene = new Scene(fxmlLoader.load());
+
+            SubjectController controller = fxmlLoader.<SubjectController>getController();
+
+            controller.setMode(WindowMode.MODIFICATION);
+            controller.setSubjectFromSubjectsController(
+                    _tableViewSubjects.getSelectionModel().getSelectedItem().getSujet());
+
+            Stage stage = new Stage();
+
+            stage.setTitle("Ajout d'une thématique");
+            stage.initOwner((Stage) _tableViewSubjects.getScene().getWindow());
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.setResizable(false);
+            stage.setScene(scene);
+            controller.setStage(stage);
+            stage.showAndWait();
+
+            fillTableViewSubjects();
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }

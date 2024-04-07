@@ -4,14 +4,17 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Subjects {
 
-    private List<String> _subjects;
+    private final List<String> _subjects;
 
     public Subjects() {
         _subjects = new ArrayList<String>();
@@ -21,18 +24,16 @@ public class Subjects {
         return _subjects;
     }
 
-    public void addSubject(String subject) {
-        _subjects.add(subject);
-    }
-
     public void loadFromJson() {
         _subjects.clear();
 
         JSONParser parser = new JSONParser();
 
         try {
-            String file = Subjects.class.getResource("json/subjects.json").getFile();
-            Path path = Path.of(file);
+            URI uri = ClassLoader.getSystemResource("com/pimms/createassessment/").toURI();
+            String mainPath = Paths.get(uri).toString();
+            Path path = Paths.get(mainPath ,"json/subjects.json");
+
             String json = Files.readString(path);
 
             Object obj = parser.parse(json);
@@ -42,12 +43,9 @@ public class Subjects {
             JSONArray jsonSubjects = (JSONArray) jsonObject.get("subjects");
 
             // Iterates over subjects
-            for (int i = 0, size = jsonSubjects.size(); i < size; i++)
-            {
-                Question question = new Question();
+            for (Object jsonSubject : jsonSubjects) {
 
-                String element = (String) jsonSubjects.get(i);
-
+                String element = (String) jsonSubject;
                 _subjects.add(element);
             }
         } catch (Exception ex) {

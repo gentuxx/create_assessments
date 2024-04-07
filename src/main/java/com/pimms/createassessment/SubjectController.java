@@ -1,5 +1,6 @@
 package com.pimms.createassessment;
 
+import com.pimms.createassessment.enums.WindowMode;
 import com.pimms.createassessment.util.JsonUtil;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -12,12 +13,16 @@ import javafx.stage.Stage;
 public class SubjectController {
 
     private Stage _stage;
+    private WindowMode _windowMode;
+    String _subjectFromSubjectsController;
 
     @FXML
     TextField tfSubject;
 
     public SubjectController() {
         _stage = null;
+        _windowMode = WindowMode.UNDEFINED;
+        _subjectFromSubjectsController = "";
     }
 
     @FXML
@@ -58,7 +63,15 @@ public class SubjectController {
 
 
     private void validation() {
-        JsonUtil.addSubject(tfSubject.getText().trim());
+        String subject = tfSubject.getText().trim();
+        if (_windowMode == WindowMode.CREATION && !JsonUtil.addSubject(subject)) {
+            // TODO : Afficher un message d'erreur
+            return;
+        } else if (_windowMode == WindowMode.MODIFICATION
+                && !JsonUtil.modifySubject(_subjectFromSubjectsController, subject)) {
+            // TODO : Afficher un message d'erreur
+            return;
+        }
         _stage.close();
     }
 
@@ -68,5 +81,13 @@ public class SubjectController {
 
     public void setStage(Stage stage) {
         _stage = stage;
+    }
+
+    public void setMode(WindowMode windowMode) {
+        _windowMode = windowMode;
+    }
+
+    public void setSubjectFromSubjectsController(String subject) {
+        _subjectFromSubjectsController = subject;
     }
 }

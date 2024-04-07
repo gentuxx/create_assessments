@@ -7,8 +7,10 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,8 +36,10 @@ public class Questions {
         JSONParser parser = new JSONParser();
 
         try {
-            String file = GeneratorEngine.class.getResource(pathname).getFile();
-            Path path = Path.of(file);
+            URI uri = ClassLoader.getSystemResource("com/pimms/createassessment/").toURI();
+            String mainPath = Paths.get(uri).toString();
+            Path path = Paths.get(mainPath ,pathname);
+
             String json = Files.readString(path);
 
             Object obj = parser.parse(json);
@@ -45,10 +49,10 @@ public class Questions {
             JSONArray jsonQuestions = (JSONArray) jsonObject.get("questions");
 
             // Iterates over questions
-            for (int i = 0, size = jsonQuestions.size(); i < size; i++) {
+            for (Object jsonQuestion : jsonQuestions) {
                 Question question = new Question();
 
-                JSONObject element = (JSONObject) jsonQuestions.get(i);
+                JSONObject element = (JSONObject) jsonQuestion;
 
                 question.setQuestion(element.get("question").toString());
 
