@@ -238,6 +238,9 @@ public class SubjectsController {
     }
 
     private void modifySubjectWindow() {
+
+        int selectedIndex = _tableViewSubjects.getSelectionModel().getSelectedIndex();
+
         boolean resultWindow = false;
 
         if (_tableViewSubjects.getSelectionModel().getSelectedItem() == null) {
@@ -266,6 +269,7 @@ public class SubjectsController {
             stage.showAndWait();
 
             fillTableViewSubjects();
+            _tableViewSubjects.getSelectionModel().select(selectedIndex);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
