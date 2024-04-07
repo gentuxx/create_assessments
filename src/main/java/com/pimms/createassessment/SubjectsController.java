@@ -142,6 +142,30 @@ public class SubjectsController {
         }
     }
 
+    @FXML
+    void onUpButtonClick(ActionEvent event) throws ParseException {
+
+        boolean resultWindow = false;
+
+        Subject subject = _tableViewSubjects.getSelectionModel().getSelectedItem();
+
+        if (subject == null) {
+            return;
+        }
+    }
+
+    @FXML
+    void onDownButtonClick(ActionEvent event) throws ParseException {
+
+        boolean resultWindow = false;
+
+        Subject subject = _tableViewSubjects.getSelectionModel().getSelectedItem();
+
+        if (subject == null) {
+            return;
+        }
+    }
+
     private void hideTableViewHeaders() {
         _tableViewSubjects.widthProperty().addListener(new ChangeListener<Number>() {
             @Override
@@ -165,7 +189,7 @@ public class SubjectsController {
 
         subjectCol.setCellValueFactory(new PropertyValueFactory<Subject,String>("Sujet"));
 
-        subjectCol.setMinWidth(733);
+        subjectCol.setMinWidth(_tableViewSubjects.getWidth() -2);
 
         _tableViewSubjects.getColumns().addAll(subjectCol);
     }
