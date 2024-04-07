@@ -5,6 +5,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 public class ConfirmController {
@@ -78,5 +79,10 @@ public class ConfirmController {
 
     public void initializeUI() {
         libText.setText(_text);
+
+        String iconPath = HelloApplication.class.getResource("pictures/panda.jpg").toString();
+
+        Image image = new Image(iconPath);
+        _stage.getIcons().add(image);
     }
 }

@@ -6,6 +6,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
@@ -61,13 +62,24 @@ public class SubjectController {
         if (_windowMode == WindowMode.CREATION) {
             _stage.setTitle("Ajout d'une thématique");
         } else if (_windowMode == WindowMode.MODIFICATION) {
-            _stage.setTitle("Modification d'une thématique");
+            _stage.setTitle("Modification de la thématique " + _subjectFromSubjectsController);
+            tfSubject.setText(_subjectFromSubjectsController);
         }
+        String iconPath = HelloApplication.class.getResource("pictures/panda.jpg").toString();
+
+        Image image = new Image(iconPath);
+        _stage.getIcons().add(image);
     }
 
 
     private void validation() {
         String subject = tfSubject.getText().trim();
+
+        if (subject.trim().equals(_subjectFromSubjectsController)) {
+            _stage.close();
+            return;
+        }
+        
         if (_windowMode == WindowMode.CREATION && !JsonUtil.addSubject(subject)) {
             // TODO : Afficher un message d'erreur
             return;

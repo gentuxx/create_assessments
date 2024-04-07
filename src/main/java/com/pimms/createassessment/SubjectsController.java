@@ -16,6 +16,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
@@ -257,5 +258,9 @@ public class SubjectsController {
 
     private void initializeUI() {
         _tableViewSubjects.setEditable(false);
+        String iconPath = HelloApplication.class.getResource("pictures/panda.jpg").toString();
+
+        Image image = new Image(iconPath);
+        _stage.getIcons().add(image);
     }
 }

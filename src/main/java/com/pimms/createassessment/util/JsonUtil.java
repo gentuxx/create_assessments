@@ -1,6 +1,7 @@
 package com.pimms.createassessment.util;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.*;
 import com.pimms.createassessment.*;
 import com.pimms.createassessment.models.Subject;
@@ -147,12 +148,46 @@ public class JsonUtil {
 
     public static boolean modifySubject(String subjectToRename, String newSubjectName) {
 
+        JSONParser parser = new JSONParser();
+
         if (newSubjectName.isBlank()) {
             return false;
         }
 
-        System.out.println(subjectToRename);
-        System.out.println(newSubjectName);
+        // TODO : Check if the subject already exists
+
+        // First modify the subject in subjects.json
+        URI uri = null;
+        try {
+            uri = ClassLoader.getSystemResource("com/pimms/createassessment/").toURI();
+
+            String mainPath = Paths.get(uri).toString();
+            Path path = Paths.get(mainPath ,"json/subjects.json");
+
+            String json = Files.readString(path);
+
+            Object obj = parser.parse(json);
+
+            JSONObject jsonObject = (JSONObject) obj;
+
+            JSONArray jsonSubjects = (JSONArray) jsonObject.get("subjects");
+
+            Path questionsPathBefore = Paths.get(mainPath ,"json/questions_" + subjectToRename.toLowerCase().replaceAll("\s", "_") + ".json");
+            Path questionsPathRenamed = Paths.get(mainPath ,"json/questions_" + newSubjectName.toLowerCase().replaceAll("\s", "_") + ".json");
+
+            Files.move(questionsPathBefore, questionsPathRenamed);
+
+            jsonSubjects.remove(subjectToRename);
+            jsonSubjects.addLast(newSubjectName);
+
+            FileWriter fw = new FileWriter(Subjects.class.getResource("json/subjects.json").getFile());
+            fw.write(jsonObject.toJSONString());
+
+            fw.flush();
+            fw.close();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         return true;
     }
