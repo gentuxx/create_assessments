@@ -27,6 +27,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.List;
 
 import javafx.beans.property.ReadOnlyIntegerProperty;
 
@@ -291,6 +292,10 @@ public class SubjectsController {
             JsonUtil.deleteSubject(_tableViewSubjects.getSelectionModel().getSelectedItem().getSujet());
             _tableViewSubjects.getItems().remove(subject);
         }
+    }
+
+    public List<Subject> getSubjects() {
+        return _tableViewSubjects.getItems().stream().toList();
     }
 
     private void closeWindow() {

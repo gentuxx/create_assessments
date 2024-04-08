@@ -1,5 +1,7 @@
 package com.pimms.createassessment;
 
+import com.pimms.createassessment.models.Subject;
+import com.pimms.createassessment.util.JsonUtil;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -19,6 +21,7 @@ import javafx.stage.Stage;
 import org.controlsfx.control.CheckComboBox;
 
 import java.io.IOException;
+import java.util.List;
 
 public class HelloController implements AutoCloseable {
 
@@ -99,6 +102,15 @@ public class HelloController implements AutoCloseable {
             controller.setStage(stage);
 
             stage.showAndWait();
+
+            // TODO : Write the subject.json with the new order
+            List<Subject> subjects = controller.getSubjects();
+
+            JsonUtil.deleteSubjectsInSubjectJson();
+
+            for (Subject s : subjects) {
+                JsonUtil.addSubjectInSubjectJson(s.getSujet());
+            }
 
             refreshCombo();
         } catch (IOException e) {

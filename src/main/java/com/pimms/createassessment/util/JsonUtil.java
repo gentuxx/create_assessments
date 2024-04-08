@@ -188,7 +188,78 @@ public class JsonUtil {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+        return true;
+    }
 
+    /**
+     * Delete the subject in subjects.json
+     * @param subject
+     * @return
+     */
+    public static boolean deleteSubjectsInSubjectJson() {
+
+        JSONParser parser = new JSONParser();
+
+        try {
+            URI uri = ClassLoader.getSystemResource("com/pimms/createassessment/").toURI();
+            String mainPath = Paths.get(uri).toString();
+
+            Path subjectPath = Paths.get(mainPath ,"json/subjects.json");
+            String json = Files.readString(subjectPath);
+
+            Object obj = parser.parse(json);
+
+            JSONObject jsonObject = (JSONObject) obj;
+
+            JSONArray jsonSubjects = (JSONArray) jsonObject.get("subjects");
+
+            jsonSubjects.removeAll(jsonSubjects);
+
+            FileWriter fw = new FileWriter(Subjects.class.getResource("json/subjects.json").getFile());
+            fw.write(jsonObject.toJSONString());
+
+            fw.flush();
+            fw.close();
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+        return true;
+    }
+
+    public static boolean addSubjectInSubjectJson(String subject) {
+
+        JSONParser parser = new JSONParser();
+
+        try {
+            // Creating the json file
+            // TODO : Check if it doesn't exist
+            if (subject.isBlank()) {
+                // TODO
+                return false;
+            }
+
+            URI uri = ClassLoader.getSystemResource("com/pimms/createassessment/").toURI();
+            String mainPath = Paths.get(uri).toString();
+            Path path = Paths.get(mainPath ,"json/subjects.json");
+
+            String json = Files.readString(path);
+
+            Object obj = parser.parse(json);
+
+            JSONObject jsonObject = (JSONObject) obj;
+
+            JSONArray jsonSubjects = (JSONArray) jsonObject.get("subjects");
+
+            jsonSubjects.addLast(subject);
+
+            FileWriter fw = new FileWriter(Subjects.class.getResource("json/subjects.json").getFile());
+            fw.write(jsonObject.toJSONString());
+
+            fw.flush();
+            fw.close();
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
         return true;
     }
 }
