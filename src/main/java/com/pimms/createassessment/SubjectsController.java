@@ -4,6 +4,7 @@ package com.pimms.createassessment;
 import com.pimms.createassessment.models.Subject;
 import com.pimms.createassessment.util.JsonUtil;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -13,6 +14,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -26,6 +28,8 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.text.ParseException;
 
+import javafx.beans.property.ReadOnlyIntegerProperty;
+
 import com.pimms.createassessment.enums.WindowMode;
 
 public class SubjectsController {
@@ -34,6 +38,12 @@ public class SubjectsController {
 
     @FXML
     private TableView<Subject> _tableViewSubjects;
+
+    @FXML
+    private Button _btnUp;
+
+    @FXML
+    private Button _btnDown;
 
     public SubjectsController() {
         _stage = null;
@@ -53,6 +63,7 @@ public class SubjectsController {
     @FXML
     void onKeyPressed(KeyEvent event) {
         switch (event.getCode()) {
+            case KeyCode.DELETE -> deleteSubject();
             case KeyCode.ESCAPE -> closeWindow();
         }
     }
@@ -104,50 +115,20 @@ public class SubjectsController {
     }
 
     @FXML
-    void onDeleteButtonClick(ActionEvent event) throws ParseException {
-
-        boolean resultWindow = false;
-
-        Subject subject = _tableViewSubjects.getSelectionModel().getSelectedItem();
-
-        if (subject == null) {
-            return;
-        }
-
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("confirm-view.fxml"));
-            Scene scene = new Scene(fxmlLoader.load());
-
-            ConfirmController controller = fxmlLoader.<ConfirmController>getController();
-            controller.setText("Êtes-vous sûr de vouloir supprimer la thématique " + "\n" + subject + " ?");
-
-            Stage stage = new Stage();
-
-            stage.setTitle("Suppression d'une thématique");
-            stage.initOwner((Stage) _tableViewSubjects.getScene().getWindow());
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.setResizable(false);
-            stage.setScene(scene);
-            controller.setStage(stage);
-            stage.showAndWait();
-
-            resultWindow = controller.getResult();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        if (resultWindow) {
-            JsonUtil.deleteSubject(_tableViewSubjects.getSelectionModel().getSelectedItem().getSujet());
-            _tableViewSubjects.getItems().remove(subject);
-        }
+    void onDeleteButtonClick(ActionEvent event) {
+        deleteSubject();
     }
 
+    /*
     @FXML
     void onUpButtonClick(ActionEvent event) throws ParseException {
 
         boolean resultWindow = false;
 
         Subject subject = _tableViewSubjects.getSelectionModel().getSelectedItem();
+        int index = _tableViewSubjects.getSelectionModel().getSelectedIndex();
+
+        //_tableViewSubjects.
 
         if (subject == null) {
             return;
@@ -164,7 +145,7 @@ public class SubjectsController {
         if (subject == null) {
             return;
         }
-    }
+    }*/
 
     private void hideTableViewHeaders() {
         _tableViewSubjects.widthProperty().addListener(new ChangeListener<Number>() {
@@ -275,6 +256,43 @@ public class SubjectsController {
         }
     }
 
+    private void deleteSubject() {
+        boolean resultWindow = false;
+
+        Subject subject = _tableViewSubjects.getSelectionModel().getSelectedItem();
+
+        if (subject == null) {
+            return;
+        }
+
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("confirm-view.fxml"));
+            Scene scene = new Scene(fxmlLoader.load());
+
+            ConfirmController controller = fxmlLoader.<ConfirmController>getController();
+            controller.setText("Êtes-vous sûr de vouloir supprimer la thématique " + "\n" + subject + " ?");
+
+            Stage stage = new Stage();
+
+            stage.setTitle("Suppression d'une thématique");
+            stage.initOwner((Stage) _tableViewSubjects.getScene().getWindow());
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.setResizable(false);
+            stage.setScene(scene);
+            controller.setStage(stage);
+            stage.showAndWait();
+
+            resultWindow = controller.getResult();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        if (resultWindow) {
+            JsonUtil.deleteSubject(_tableViewSubjects.getSelectionModel().getSelectedItem().getSujet());
+            _tableViewSubjects.getItems().remove(subject);
+        }
+    }
+
     private void closeWindow() {
         Stage stage = (Stage) _stage.getScene().getWindow();
         stage.close();
@@ -286,6 +304,30 @@ public class SubjectsController {
 
     private void initializeUI() {
         _tableViewSubjects.setEditable(false);
+
+        ReadOnlyIntegerProperty selectedIndex = _tableViewSubjects.getSelectionModel().selectedIndexProperty();
+
+        _btnUp.disableProperty().bind(selectedIndex.lessThanOrEqualTo(0));
+        _btnDown.disableProperty().bind(Bindings.createBooleanBinding(() -> {
+            int index = selectedIndex.get();
+            return index < 0 || index+1 >= _tableViewSubjects.getItems().size();
+        }, selectedIndex, _tableViewSubjects.getItems()));
+
+        _btnUp.setOnAction(evt -> {
+            int index = _tableViewSubjects.getSelectionModel().getSelectedIndex();
+            // swap items
+            _tableViewSubjects.getItems().add(index-1, _tableViewSubjects.getItems().remove(index));
+            // select item at new position
+            _tableViewSubjects.getSelectionModel().clearAndSelect(index-1);
+        });
+
+        _btnDown.setOnAction(evt -> {
+            int index = _tableViewSubjects.getSelectionModel().getSelectedIndex();
+            // swap items
+            _tableViewSubjects.getItems().add(index+1, _tableViewSubjects.getItems().remove(index));
+            // select item at new position
+            _tableViewSubjects.getSelectionModel().clearAndSelect(index+1);
+        });
         String iconPath = HelloApplication.class.getResource("pictures/panda.jpg").toString();
 
         Image image = new Image(iconPath);

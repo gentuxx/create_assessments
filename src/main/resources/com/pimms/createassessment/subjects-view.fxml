@@ -11,7 +11,7 @@
       <Button layoutX="196.0" layoutY="471.0" mnemonicParsing="false" onAction="#onDeleteButtonClick" text="Supprimer" />
       <TableView fx:id="_tableViewSubjects" layoutX="8.0" layoutY="9.0" onMouseClicked="#onMouseClicked" prefHeight="450.0" prefWidth="606.0" />
       <Button layoutX="633.0" layoutY="470.0" mnemonicParsing="false" onAction="#onExitButtonClick" prefHeight="25.0" prefWidth="86.0" text="Quitter" />
-      <Button layoutX="633.0" layoutY="214.0" mnemonicParsing="false" onAction="#onUpButtonClick" prefHeight="25.0" prefWidth="86.0" text="Monter" />
-      <Button layoutX="633.0" layoutY="247.0" mnemonicParsing="false" onAction="#onDownButtonClick" prefHeight="25.0" prefWidth="86.0" text="Descendre" />
+      <Button fx:id="_btnUp" layoutX="633.0" layoutY="214.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="86.0" text="Monter" />
+      <Button fx:id="_btnDown" layoutX="633.0" layoutY="247.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="86.0" text="Descendre" />
    </children>
 </AnchorPane>
