@@ -103,7 +103,7 @@ public class HelloController implements AutoCloseable {
 
             stage.showAndWait();
 
-            // TODO : Write the subject.json with the new order
+            // Writes the subject.json with the new order
             List<Subject> subjects = controller.getSubjects();
 
             JsonUtil.deleteSubjectsInSubjectJson();
