@@ -3,6 +3,10 @@ package com.pimms.createassessment.util;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.*;
+
+import com.itextpdf.io.image.ImageData;
+import com.itextpdf.io.image.ImageDataFactory;
+import com.itextpdf.layout.element.Image;
 import com.pimms.createassessment.*;
 import com.pimms.createassessment.models.Subject;
 import org.json.simple.JSONArray;
@@ -193,7 +197,6 @@ public class JsonUtil {
 
     /**
      * Delete the subject in subjects.json
-     * @param subject
      * @return
      */
     public static boolean deleteSubjectsInSubjectJson() {
@@ -261,5 +264,48 @@ public class JsonUtil {
             throw new RuntimeException(ex);
         }
         return true;
+    }
+
+    public static List<Question> getQuestions(String subject) {
+        List<Question> questions = new ArrayList<Question>();
+
+        JSONParser parser = new JSONParser();
+
+        try {
+            // Creating the json file
+            // TODO : Check if it doesn't exist
+            if (subject.isBlank()) {
+                // TODO
+                return null;
+            }
+
+            URI uri = ClassLoader.getSystemResource("com/pimms/createassessment/").toURI();
+            String mainPath = Paths.get(uri).toString();
+            Path path = Paths.get(mainPath ,"json/questions_" + subject.toLowerCase().replaceAll("\s", "_") + ".json");
+
+            String json = Files.readString(path);
+
+            Object obj = parser.parse(json);
+
+            JSONObject jsonObject = (JSONObject) obj;
+
+            JSONArray jsonQuestions = (JSONArray) jsonObject.get("questions");
+
+            // Iterates over questions
+            for (Object jsonQuestion : jsonQuestions) {
+                Question question = new Question();
+
+                JSONObject element = (JSONObject) jsonQuestion;
+
+                question.setQuestion(element.get("question").toString());
+                questions.add(question);
+
+                //System.out.println(element.get("question").toString());
+            }
+
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+        return questions;
     }
 }

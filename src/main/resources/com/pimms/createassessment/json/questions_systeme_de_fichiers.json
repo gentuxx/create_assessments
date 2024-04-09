@@ -2,6 +2,7 @@
     "questions":
     [
         {
+            "id":1,
             "question": "Fichiers & dossiers : quelle affirmation est fausse ?",
             "answers":
             [
@@ -11,6 +12,7 @@
             ]
         },
         {
+            "id":2,
             "question": "Quel est le dossier parent du fichier « F » ?",
             "image_question": "/home/gentux/Prog/Java/intellij_workspace/CreateAssessment/src/main/resources/com/pimms/createassessment/pictures/dossiers.png",
             "image_width": "450",

@@ -20,7 +20,8 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Edition">
             <items>
-                  <MenuItem fx:id="menuItemSubjects" mnemonicParsing="false" onAction="#onMenuItemSubjects" text="Gérer les thématiques et les questions" />
+                  <MenuItem fx:id="menuItemSubjects" mnemonicParsing="false" onAction="#onMenuItemSubjects" text="Gérer les thématiques" />
+                  <MenuItem fx:id="menuItemSubjects1" mnemonicParsing="false" onAction="#onMenuItemQuestions" text="Gérer les questions" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Aide">

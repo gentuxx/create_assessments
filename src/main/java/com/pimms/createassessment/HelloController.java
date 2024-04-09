@@ -119,6 +119,42 @@ public class HelloController implements AutoCloseable {
     }
 
     @FXML
+    void onMenuItemQuestions(ActionEvent event) {
+
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("questions-view.fxml"));
+            Scene scene = new Scene(fxmlLoader.load());
+
+            QuestionsController controller = fxmlLoader.<QuestionsController>getController();
+
+            Stage stage = new Stage();
+
+            stage.setTitle("Gestion des questions");
+            stage.initOwner((Stage) menuItemSubjects.getParentPopup().getOwnerWindow());
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.setResizable(false);
+            stage.setScene(scene);
+            controller.setStage(stage);
+
+            stage.showAndWait();
+
+            // Writes the subject.json with the new order
+            // TODO : Write the new questions order if it has changed
+            //List<Subject> subjects = controller.getSubjects();
+
+            //JsonUtil.deleteSubjectsInSubjectJson();
+
+            //for (Subject s : subjects) {
+            //    JsonUtil.addSubjectInSubjectJson(s.getSujet());
+            //}
+
+            //refreshCombo();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @FXML
     void onMenuItemHelp(ActionEvent event) {
         // TODO
     }

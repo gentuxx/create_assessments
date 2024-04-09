@@ -57,13 +57,18 @@ public class Questions {
                 question.setQuestion(element.get("question").toString());
 
                 if (element.get("image_question") != null) {
-                    String imageJson = element.get("image_question").toString();
-                    ImageData data = ImageDataFactory.create(imageJson);
-                    Image image = new Image(data);
-                    image.scaleAbsolute(Integer.parseInt(element.get("image_width").toString()),
-                            Integer.parseInt(element.get("image_height").toString()));
+                    String imagePath = element.get("image_question").toString();
+                    question.setImage(imagePath);
+                }
 
-                    question.setImage(image);
+                if (element.get("image_width") != null) {
+                    int width = Integer.parseInt(element.get("image_width").toString());
+                    question.setWidth(width);
+                }
+
+                if (element.get("image_height") != null) {
+                    int height = Integer.parseInt(element.get("image_height").toString());
+                    question.setHeight(height);
                 }
 
                 JSONArray jsonAnswers = (JSONArray) element.get("answers");

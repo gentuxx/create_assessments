@@ -259,8 +259,13 @@ public class GeneratorEngine {
             tQuestion.setBold();
             pQuestion.add(tQuestion);
 
-            if (question.getImage() != null) {
-                pQuestion.add(question.getImage());
+            if (!question.getImage().isEmpty()) {
+                ImageData data = ImageDataFactory.create(question.getImage());
+                Image image = new Image(data);
+
+                image.scaleAbsolute(question.getWidth(), question.getHeight());
+
+                pQuestion.add(image);
             }
             pQuestion.add("\n");
 
