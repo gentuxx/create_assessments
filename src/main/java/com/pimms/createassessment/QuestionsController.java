@@ -7,6 +7,7 @@ import com.pimms.createassessment.util.JsonUtil;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyIntegerProperty;
+import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -28,6 +29,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class QuestionsController {
@@ -92,7 +94,8 @@ public class QuestionsController {
     @FXML
     void onMouseClicked(javafx.scene.input.MouseEvent event) throws IOException {
         if (event.getClickCount() == 2) {
-            //modifyQuestionWindow();
+            modifyQuestionWindow();
+            fillTableViewQuestions();
         }
     }
 
@@ -107,7 +110,6 @@ public class QuestionsController {
             scene = new Scene(fxmlLoader.load());
 
             QuestionController controller = fxmlLoader.<QuestionController>getController();
-            controller.setMode(WindowMode.CREATION);
 
             Stage stage = new Stage();
 
@@ -118,6 +120,24 @@ public class QuestionsController {
             stage.setScene(scene);
             controller.setStage(stage);
             stage.showAndWait();
+
+            _tableViewQuestions.getItems().clear();
+
+            // TODO : Add question to tableview and rewrite json file
+            Question question = controller.getQuestion();
+
+            List<Question> merged = JsonUtil.getQuestions(
+                    _comboBoxSubjects.getSelectionModel().getSelectedItem().toString());
+
+            merged.add(question);
+
+            ObservableList<Question> data = FXCollections.observableArrayList(merged);
+            _tableViewQuestions.setItems(data);
+
+            // Write again the json file of the named subject in combobox
+            JsonUtil.addQuestions(_comboBoxSubjects.getSelectionModel().getSelectedItem().toString(),
+                    _tableViewQuestions.getItems());
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -125,36 +145,13 @@ public class QuestionsController {
 
     @FXML
     void onModifyButtonClick(ActionEvent event) {
-
-        boolean resultWindow = false;
-
-        FXMLLoader fxmlLoader = new FXMLLoader(QuestionsController.class.getResource("question-view.fxml"));
-        Scene scene = null;
-        try {
-            scene = new Scene(fxmlLoader.load());
-
-            QuestionController controller = fxmlLoader.<QuestionController>getController();
-            controller.setMode(WindowMode.MODIFICATION);
-            // TODO : height & width : mettre la taille de l'image
-            //controller.setQuestion(new Question());
-
-            Stage stage = new Stage();
-
-            stage.setTitle("Modification d'une question");
-            stage.initOwner((Stage) _tableViewQuestions.getScene().getWindow());
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.setResizable(false);
-            stage.setScene(scene);
-            controller.setStage(stage);
-            stage.showAndWait();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        modifyQuestionWindow();
+        fillTableViewQuestions();
     }
 
     @FXML
     void onDeleteButtonClick(ActionEvent event) {
-        //deleteQuestion();
+        deleteQuestion();
     }
 
     private void hideTableViewHeaders() {
@@ -176,84 +173,83 @@ public class QuestionsController {
 
     private void createColumnsInTableViewUsers() {
 
-        TableColumn subjectCol = new TableColumn("Question");
+        // TODO : See why we don't have the path of the image in the table
+        // TODO : How to add in columns the answsers, fix by putting 4 strings separated for each answer ?
+        // TODO : Hide the columns
 
-        subjectCol.setCellValueFactory(new PropertyValueFactory<Subject,String>("Question"));
+        TableColumn subjectCol = new TableColumn("Question");
+        TableColumn imageCol = new TableColumn("Image");
+        TableColumn widthCol = new TableColumn("Width");
+        TableColumn heightCol = new TableColumn("Height");
+        TableColumn answer1Col = new TableColumn<>("answer1");
+        TableColumn answer2Col = new TableColumn<>("answer2");
+        TableColumn answer3Col = new TableColumn<>("answer3");
+        TableColumn answer4Col = new TableColumn<>("answer4");
+
+        subjectCol.setCellValueFactory(new PropertyValueFactory<Question,String>("Question"));
+        imageCol.setCellValueFactory(new PropertyValueFactory<Question,String>("Image"));
+        widthCol.setCellValueFactory(new PropertyValueFactory<Question,String>("Width"));
+        heightCol.setCellValueFactory(new PropertyValueFactory<Question,String>("Height"));
+        answer1Col.setCellValueFactory(new PropertyValueFactory<Question,String>("answer1"));
+        answer2Col.setCellValueFactory(new PropertyValueFactory<Question,String>("answer2"));
+        answer3Col.setCellValueFactory(new PropertyValueFactory<Question,String>("answer3"));
+        answer4Col.setCellValueFactory(new PropertyValueFactory<Question,String>("answer4"));
+
+        imageCol.setVisible(false);
+        widthCol.setVisible(false);
+        heightCol.setVisible(false);
+        answer1Col.setVisible(false);
+        answer2Col.setVisible(false);
+        answer3Col.setVisible(false);
+        answer4Col.setVisible(false);
 
         subjectCol.setMinWidth(_tableViewQuestions.getWidth() -2);
 
-        _tableViewQuestions.getColumns().addAll(subjectCol);
+        _tableViewQuestions.getColumns().addAll(subjectCol, imageCol, widthCol, heightCol, answer1Col, answer2Col,
+                answer3Col, answer4Col);
     }
 
     private void fillTableViewQuestions() {
         _tableViewQuestions.getItems().clear();
+
         ObservableList<Question> data = FXCollections.observableArrayList(
                 JsonUtil.getQuestions(_comboBoxSubjects.getSelectionModel().getSelectedItem().toString()));
         _tableViewQuestions.setItems(data);
-    }
-
-    /*
-    private void openSubjectWindow(WindowMode mode) {
-        Subject subject = null;
-
-        if (mode == WindowMode.MODIFICATION) { // Modification
-            subject = _tableViewQuestions.getSelectionModel().getSelectedItem();
-
-            if (subject == null) {
-                return;
-            }
-        }
-
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("question-view.fxml"));
-        Parent root = null;
-        try {
-            root = (Parent) fxmlLoader.load();
-
-            QuestionController controller = fxmlLoader.<QuestionController>getController();
-
-            Stage stage = new Stage();
-            stage.setTitle("Pimms - Création/Modification d'une thématique");
-            stage.initOwner(_tableViewQuestions.getScene().getWindow());
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.setScene(new Scene(root));
-
-            controller.setStage(stage);
-            controller.setMode(mode); // Modification
-            controller.setSubject(subject);
-
-            stage.showAndWait();
-
-            // Reloading the users table
-            fillTableViewSubjects();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     private void modifyQuestionWindow() {
 
         int selectedIndex = _tableViewQuestions.getSelectionModel().getSelectedIndex();
 
-        boolean resultWindow = false;
-
-        if (_tableViewQuestions.getSelectionModel().getSelectedItem() == null) {
+        if (selectedIndex <= -1) {
             return;
         }
 
-        FXMLLoader fxmlLoader = new FXMLLoader(QuestionsController.class.getResource("subject-view.fxml"));
+        boolean resultWindow = false;
+
+        FXMLLoader fxmlLoader = new FXMLLoader(QuestionsController.class.getResource("question-view.fxml"));
         Scene scene = null;
         try {
             scene = new Scene(fxmlLoader.load());
 
-            SubjectController controller = fxmlLoader.<SubjectController>getController();
+            QuestionController controller = fxmlLoader.<QuestionController>getController();
 
-            controller.setMode(WindowMode.MODIFICATION);
-            controller.setSubjectFromSubjectsController(
-                    _tableViewQuestions.getSelectionModel().getSelectedItem().getSujet());
+            Question question = new Question();
+
+            question.setQuestion(_tableViewQuestions.getSelectionModel().getSelectedItem().getQuestion());
+            question.setImage(_tableViewQuestions.getSelectionModel().getSelectedItem().getImage());
+            question.setWidth(_tableViewQuestions.getSelectionModel().getSelectedItem().getWidth());
+            question.setHeight(_tableViewQuestions.getSelectionModel().getSelectedItem().getHeight());
+            question.setAnswer1(_tableViewQuestions.getSelectionModel().getSelectedItem().getAnswer1());
+            question.setAnswer2(_tableViewQuestions.getSelectionModel().getSelectedItem().getAnswer2());
+            question.setAnswer3(_tableViewQuestions.getSelectionModel().getSelectedItem().getAnswer3());
+            question.setAnswer4(_tableViewQuestions.getSelectionModel().getSelectedItem().getAnswer4());
+
+            controller.setQuestion(question);
 
             Stage stage = new Stage();
 
-            stage.setTitle("Ajout d'une thématique");
+            stage.setTitle("Modification d'une question");
             stage.initOwner((Stage) _tableViewQuestions.getScene().getWindow());
             stage.initModality(Modality.WINDOW_MODAL);
             stage.setResizable(false);
@@ -261,8 +257,28 @@ public class QuestionsController {
             controller.setStage(stage);
             stage.showAndWait();
 
-            fillTableViewSubjects();
-            _tableViewQuestions.getSelectionModel().select(selectedIndex);
+            if (controller.getQuestion() == null) {
+                return;
+            }
+
+            int index = _tableViewQuestions.getSelectionModel().getSelectedIndex();
+            _tableViewQuestions.getItems().remove(index);
+
+            question = controller.getQuestion();
+
+            List<Question> merged = new ArrayList<Question>();
+            for (Question q : _tableViewQuestions.getItems()) {
+                merged.add(q);
+            }
+            merged.add(index, question);
+
+            ObservableList<Question> data = FXCollections.observableArrayList(merged);
+            _tableViewQuestions.setItems(data);
+
+            // Write again the json file of the named subject in combobox
+            JsonUtil.addQuestions(_comboBoxSubjects.getSelectionModel().getSelectedItem().toString(),
+                    _tableViewQuestions.getItems());
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -271,9 +287,9 @@ public class QuestionsController {
     private void deleteQuestion() {
         boolean resultWindow = false;
 
-        Subject subject = _tableViewQuestions.getSelectionModel().getSelectedItem();
+        Question question = _tableViewQuestions.getSelectionModel().getSelectedItem();
 
-        if (subject == null) {
+        if (question == null) {
             return;
         }
 
@@ -282,7 +298,7 @@ public class QuestionsController {
             Scene scene = new Scene(fxmlLoader.load());
 
             ConfirmController controller = fxmlLoader.<ConfirmController>getController();
-            controller.setText("Êtes-vous sûr de vouloir supprimer la thématique " + "\n" + subject + " ?");
+            controller.setText("Êtes-vous sûr de vouloir supprimer la question " + "\n" + question.getQuestion() + " ?");
 
             Stage stage = new Stage();
 
@@ -300,10 +316,14 @@ public class QuestionsController {
         }
 
         if (resultWindow) {
-            JsonUtil.deleteSubject(_tableViewQuestions.getSelectionModel().getSelectedItem().getSujet());
-            _tableViewQuestions.getItems().remove(subject);
+
+            _tableViewQuestions.getItems().remove(question);
+
+            // Write again the json file of the named subject in combobox
+            JsonUtil.addQuestions(_comboBoxSubjects.getSelectionModel().getSelectedItem().toString(),
+                    _tableViewQuestions.getItems());
         }
-    }*/
+    }
 
     public List<Question> getQuestions() {
         return _tableViewQuestions.getItems().stream().toList();

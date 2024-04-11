@@ -3,6 +3,7 @@ package com.pimms.createassessment;
 
 import com.pimms.createassessment.enums.WindowMode;
 import com.pimms.createassessment.models.Subject;
+import com.pimms.createassessment.util.JsonUtil;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -10,13 +11,17 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+
+import java.io.File;
 
 public class QuestionController {
 
-    private Subject _subject;
-    private WindowMode _mode;
+    private Question _question;
+    //private WindowMode _windowMode;
     private Stage _stage;
+
 
     @FXML
     private TextField tfQuestion;
@@ -32,8 +37,8 @@ public class QuestionController {
     private TextField tfAnswer4;
 
     public QuestionController() {
-        _subject = null;
-        _mode = WindowMode.UNDEFINED;
+        _question = new Question();
+        //_windowMode = WindowMode.UNDEFINED;
         _stage = null;
     }
 
@@ -47,31 +52,42 @@ public class QuestionController {
     @FXML
     void onKeyPressed(KeyEvent event) {
         switch (event.getCode()) {
-            case KeyCode.ESCAPE -> closeWindow();
+            case KeyCode.ENTER:
+                updateQuestion();
+                closeWindow();
+                break;
+            case KeyCode.ESCAPE:
+                _question = null;
+                closeWindow();
+                break;
         }
     }
 
     @FXML
-    void onExitButtonClick(ActionEvent event) {
-        Stage stage = (Stage) tfQuestion.getScene().getWindow();
-        stage.close();
-    }
-
-    @FXML
     void onBrowsePictureButtonClick(ActionEvent event) {
-        // TODO
+        FileChooser fileChooser = new FileChooser();
+
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("Fichiers images", "*.jpg", "*.jpeg", "*.png"));
+
+        File selectedFile = fileChooser.showOpenDialog(_stage);
+
+        if (selectedFile != null) {
+            tfPicturePath.setText(selectedFile.getPath().toString());
+        }
     }
     @FXML
     void onDeletePictureButtonClick(ActionEvent event) {
-        // TODO
+        tfPicturePath.setText("");
     }
     @FXML
     void onCancelButtonClick(ActionEvent event) {
-        // TODO
+        closeWindow();
     }
     @FXML
     void onValidateButtonClick(ActionEvent event) {
-        // TODO
+        updateQuestion();
+        closeWindow();
     }
 
     private void closeWindow() {
@@ -83,12 +99,29 @@ public class QuestionController {
         _stage = stage;
     }
 
-    public void setSubject(Subject subject) {
-        _subject = subject;
+    public void setQuestion(Question question) {
+        this._question = question;
     }
 
-    public void setMode(WindowMode mode) {
-        _mode = mode;
+    public Question getQuestion() {
+        return _question;
+    }
+
+    /*
+    public void setMode(WindowMode windowMode) {
+        this._windowMode = windowMode;
+    }*/
+
+    public void updateQuestion() {
+        _question.setQuestion(tfQuestion.getText().trim());
+        _question.setImage(tfPicturePath.getText());
+        // TODO
+        //_question.setWidth(tfQuestion.getText().trim());
+        //_question.setHeight(tfQuestion.getText().trim());
+        _question.setAnswer1(tfAnswer1.getText().trim());
+        _question.setAnswer2(tfAnswer2.getText().trim());
+        _question.setAnswer3(tfAnswer3.getText().trim());
+        _question.setAnswer4(tfAnswer4.getText().trim());
     }
 
     private void initializeUI() {
@@ -96,5 +129,14 @@ public class QuestionController {
 
         Image image = new Image(iconPath);
         _stage.getIcons().add(image);
+
+        tfQuestion.setText(_question.getQuestion());
+        tfPicturePath.setText(_question.getImage());
+        tfAnswer1.setText(_question.getAnswer1());
+        tfAnswer2.setText(_question.getAnswer2());
+        tfAnswer3.setText(_question.getAnswer3());
+        tfAnswer4.setText(_question.getAnswer4());
+        // TODO : Width
+        // TODO : Height
     }
 }

@@ -182,43 +182,6 @@ public class SubjectsController {
         _tableViewSubjects.setItems(data);
     }
 
-    private void openSubjectWindow(WindowMode mode) {
-        Subject subject = null;
-
-        if (mode == WindowMode.MODIFICATION) { // Modification
-            subject = _tableViewSubjects.getSelectionModel().getSelectedItem();
-
-            if (subject == null) {
-                return;
-            }
-        }
-
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("question-view.fxml"));
-        Parent root = null;
-        try {
-            root = (Parent) fxmlLoader.load();
-
-            QuestionController controller = fxmlLoader.<QuestionController>getController();
-
-            Stage stage = new Stage();
-            stage.setTitle("Pimms - Création/Modification d'une thématique");
-            stage.initOwner(_tableViewSubjects.getScene().getWindow());
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.setScene(new Scene(root));
-
-            controller.setStage(stage);
-            controller.setMode(mode); // Modification
-            controller.setSubject(subject);
-
-            stage.showAndWait();
-
-            // Reloading the users table
-            fillTableViewSubjects();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     private void modifySubjectWindow() {
 
         int selectedIndex = _tableViewSubjects.getSelectionModel().getSelectedIndex();

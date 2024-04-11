@@ -1,5 +1,6 @@
 package com.pimms.createassessment.util;
 
+import java.io.PrintWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.*;
@@ -144,6 +145,20 @@ public class JsonUtil {
             if (!file.createNewFile()) {
                 // TODO
             }
+            // Writing parts of the JSON file
+            FileWriter fw = new FileWriter(Subjects.class.getResource(
+                    "json/questions_" + jsonName + ".json").getFile());
+
+            JSONObject jsonObject = new JSONObject();
+            JSONArray questionsArray = new JSONArray();
+
+            jsonObject.put("questions", questionsArray);
+
+            fw.write(jsonObject.toJSONString());
+
+            fw.flush();
+            fw.close();
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -229,6 +244,54 @@ public class JsonUtil {
         return true;
     }
 
+    public static boolean addQuestions(String subject, List<Question> questions) {
+
+        // Writing parts of the JSON file
+        try {
+            FileWriter fw = new FileWriter(Subjects.class.getResource(
+                    "json/questions_" + subject.toLowerCase().replaceAll(
+                            "\s", "_") + ".json").getFile(), false);
+
+            // Erase all content of the json file
+            PrintWriter pw = new PrintWriter(fw, false);
+            pw.flush();
+
+            JSONObject jsonObject = new JSONObject();
+            JSONArray questionsArray = new JSONArray();
+
+            for (Question question : questions) {
+
+                JSONObject jsonQuestion = new JSONObject();
+                jsonQuestion.put("question", question.getQuestion());
+                jsonQuestion.put("image_question", question.getImage());
+                // TODO : width + height
+                //jsonQuestion.put("image_width", question.getQuestion());
+                //jsonQuestion.put("image_height", question.getQuestion());
+                JSONArray jsonAnswers = new JSONArray();
+                jsonAnswers.add(question.getAnswer1());
+                jsonAnswers.add(question.getAnswer2());
+                jsonAnswers.add(question.getAnswer3());
+                jsonAnswers.add(question.getAnswer4());
+
+                jsonQuestion.put("answers", jsonAnswers);
+
+                questionsArray.add(jsonQuestion);
+            }
+
+            jsonObject.put("questions", questionsArray);
+
+            fw.write(jsonObject.toJSONString());
+
+            fw.flush();
+            fw.close();
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return true;
+    }
+
     public static boolean addSubjectInSubjectJson(String subject) {
 
         JSONParser parser = new JSONParser();
@@ -298,9 +361,37 @@ public class JsonUtil {
                 JSONObject element = (JSONObject) jsonQuestion;
 
                 question.setQuestion(element.get("question").toString());
-                questions.add(question);
 
-                //System.out.println(element.get("question").toString());
+                if (element.get("image_question") != null) {
+                    String imagePath = element.get("image_question").toString();
+                    question.setImage(imagePath);
+                }
+
+                if (element.get("image_width") != null) {
+                    int width = Integer.parseInt(element.get("image_width").toString());
+                    question.setWidth(width);
+                }
+
+                if (element.get("image_height") != null) {
+                    int height = Integer.parseInt(element.get("image_height").toString());
+                    question.setHeight(height);
+                }
+
+                JSONArray jsonAnswers = (JSONArray) element.get("answers");
+
+                String[] answers = {"","","",""};
+                // Iterates over answers of the question
+                for (int j = 0, sizeAnswers = jsonAnswers.size(); j < sizeAnswers; j++) {
+                    //question.addAnswer(jsonAnswers.get(j).toString());
+                    // TODO : Not good, see if better is possible with a list, but how can we bind it to table view..
+                    answers[j] = jsonAnswers.get(j).toString();
+                }
+                question.setAnswer1(answers[0]);
+                question.setAnswer2(answers[1]);
+                question.setAnswer3(answers[2]);
+                question.setAnswer4(answers[3]);
+
+                questions.add(question);
             }
 
         } catch (Exception ex) {

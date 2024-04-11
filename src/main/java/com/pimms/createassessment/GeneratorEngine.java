@@ -156,6 +156,17 @@ public class GeneratorEngine {
                     VerticalAlignment.TOP, 0);
 
             for (String subject : _subjects) {
+
+                String jsonName = subject.toLowerCase();
+                jsonName = jsonName.replaceAll("\s", "_");
+                Questions questions = new Questions();
+
+                questions.loadFromJson("json/questions_" + jsonName + ".json");
+
+                if (questions.getQuestions().size() == 0) {
+                    continue;
+                }
+
                 // New page
                 document.add(new AreaBreak());
 
@@ -166,12 +177,6 @@ public class GeneratorEngine {
                 title.setBorder(new SolidBorder(0.5f));
                 document.add(title);
                 document.add(crlf);
-
-                String jsonName = subject.toLowerCase();
-                jsonName = jsonName.replaceAll("\s", "_");
-                Questions questions = new Questions();
-
-                questions.loadFromJson("json/questions_" + jsonName + ".json");
 
                 for (int i = 0; i < questions.getQuestions().size(); ++i) {
                     addQuestion(document, questions.getQuestions().get(i), i +1);
@@ -272,7 +277,22 @@ public class GeneratorEngine {
             Text checkbox = new Text("\u25A1").setFontSize(16);
 
             char letter = 'a';
-            for (String answer : question.getAnswers()) {
+
+            List<String> answers = new ArrayList<String>();
+
+            if (!question.getAnswer1().isEmpty())
+                answers.add(question.getAnswer1());
+
+            if (!question.getAnswer2().isEmpty())
+                answers.add(question.getAnswer2());
+
+            if (!question.getAnswer3().isEmpty())
+                answers.add(question.getAnswer3());
+
+            if (!question.getAnswer4().isEmpty())
+                answers.add(question.getAnswer4());
+
+            for (String answer : answers) {
                 Text text = new Text("\s\s" + answer + "\n").setFontSize(13);
                 pQuestion.add(letter + ")\s\s\s\s");
                 pQuestion.add(checkbox);

@@ -73,10 +73,18 @@ public class Questions {
 
                 JSONArray jsonAnswers = (JSONArray) element.get("answers");
 
+                String[] answers = {"","","",""};
+
                 // Iterates over answers of the question
                 for (int j = 0, sizeAnswers = jsonAnswers.size(); j < sizeAnswers; j++) {
-                    question.addAnswer(jsonAnswers.get(j).toString());
+                    //question.addAnswer(jsonAnswers.get(j).toString());
+                    answers[j] = jsonAnswers.get(j).toString();
                 }
+                question.setAnswer1(answers[0]);
+                question.setAnswer2(answers[1]);
+                question.setAnswer3(answers[2]);
+                question.setAnswer4(answers[3]);
+
                 _questions.add(question);
             }
         } catch (Exception ex) {
