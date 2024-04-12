@@ -113,7 +113,6 @@ public class GeneratorEngine {
             filename = filename.replaceAll("\s", "_");
         }
         dest += filename + ".pdf";
-        dest = dest.toLowerCase();
 
         FileOutputStream fos = null;
         try {
