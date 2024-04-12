@@ -2,12 +2,8 @@ package com.pimms.createassessment.util;
 
 import java.io.PrintWriter;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.file.*;
 
-import com.itextpdf.io.image.ImageData;
-import com.itextpdf.io.image.ImageDataFactory;
-import com.itextpdf.layout.element.Image;
 import com.pimms.createassessment.*;
 import com.pimms.createassessment.models.Subject;
 import org.json.simple.JSONArray;
@@ -264,6 +260,7 @@ public class JsonUtil {
                 JSONObject jsonQuestion = new JSONObject();
                 jsonQuestion.put("question", question.getQuestion());
                 jsonQuestion.put("image_question", question.getImage());
+                jsonQuestion.put("resize_mode", question.getResizedMode());
                 // TODO : width + height
                 //jsonQuestion.put("image_width", question.getQuestion());
                 //jsonQuestion.put("image_height", question.getQuestion());
@@ -365,6 +362,11 @@ public class JsonUtil {
                 if (element.get("image_question") != null) {
                     String imagePath = element.get("image_question").toString();
                     question.setImage(imagePath);
+                }
+
+                if (element.get("resize_mode") != null) {
+                    int resizeMode = Integer.parseInt(element.get("resize_mode").toString());
+                    question.setResizedMode(resizeMode);
                 }
 
                 if (element.get("image_width") != null) {

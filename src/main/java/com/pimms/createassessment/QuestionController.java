@@ -1,13 +1,12 @@
 package com.pimms.createassessment;
 
 
-import com.pimms.createassessment.enums.WindowMode;
-import com.pimms.createassessment.models.Subject;
-import com.pimms.createassessment.util.JsonUtil;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -19,7 +18,6 @@ import java.io.File;
 public class QuestionController {
 
     private Question _question;
-    //private WindowMode _windowMode;
     private Stage _stage;
 
 
@@ -35,10 +33,18 @@ public class QuestionController {
     private TextField tfAnswer3;
     @FXML
     private TextField tfAnswer4;
+    @FXML
+    private RadioButton radioButtonSmall;
+    @FXML
+    private RadioButton radioButtonMedium;
+    @FXML
+    private RadioButton radioButtonHigh;
+    private ToggleGroup _radioGroup;
+
 
     public QuestionController() {
         _question = new Question();
-        //_windowMode = WindowMode.UNDEFINED;
+        _radioGroup = new ToggleGroup();
         _stage = null;
     }
 
@@ -115,9 +121,14 @@ public class QuestionController {
     public void updateQuestion() {
         _question.setQuestion(tfQuestion.getText().trim());
         _question.setImage(tfPicturePath.getText());
-        // TODO
-        //_question.setWidth(tfQuestion.getText().trim());
-        //_question.setHeight(tfQuestion.getText().trim());
+
+        if (radioButtonSmall.isSelected()) {
+            _question.setResizedMode(0);
+        } else if (radioButtonMedium.isSelected()) {
+            _question.setResizedMode(1);
+        } else if (radioButtonHigh.isSelected()) {
+            _question.setResizedMode(2);
+        }
         _question.setAnswer1(tfAnswer1.getText().trim());
         _question.setAnswer2(tfAnswer2.getText().trim());
         _question.setAnswer3(tfAnswer3.getText().trim());
@@ -136,7 +147,16 @@ public class QuestionController {
         tfAnswer2.setText(_question.getAnswer2());
         tfAnswer3.setText(_question.getAnswer3());
         tfAnswer4.setText(_question.getAnswer4());
-        // TODO : Width
-        // TODO : Height
+        radioButtonSmall.setToggleGroup(_radioGroup);
+        radioButtonMedium.setToggleGroup(_radioGroup);
+        radioButtonHigh.setToggleGroup(_radioGroup);
+
+        if (_question.getResizedMode() == 0) {
+            radioButtonSmall.setSelected(true);
+        } else if (_question.getResizedMode() == 1) {
+            radioButtonMedium.setSelected(true);
+        } else if (_question.getResizedMode() == 2) {
+            radioButtonHigh.setSelected(true);
+        }
     }
 }

@@ -1,8 +1,5 @@
 package com.pimms.createassessment;
 
-import com.itextpdf.io.image.ImageData;
-import com.itextpdf.io.image.ImageDataFactory;
-import com.itextpdf.layout.element.Image;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -69,6 +66,11 @@ public class Questions {
                 if (element.get("image_height") != null) {
                     int height = Integer.parseInt(element.get("image_height").toString());
                     question.setHeight(height);
+                }
+
+                if (element.get("resize_mode") != null) {
+                    int resizeMode = Integer.parseInt(element.get("resize_mode").toString());
+                    question.setResizedMode(resizeMode);
                 }
 
                 JSONArray jsonAnswers = (JSONArray) element.get("answers");

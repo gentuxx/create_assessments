@@ -268,6 +268,42 @@ public class GeneratorEngine {
                 ImageData data = ImageDataFactory.create(question.getImage());
                 Image image = new Image(data);
 
+                question.setWidth(image.getImageWidth());
+                question.setHeight(image.getImageHeight());
+
+                // Max width = 523
+                // Max height = 523 / 360
+
+                float ratio = 1f;
+
+                if (question.getWidth() > 523) {
+                    ratio = 523 / question.getWidth();
+                    question.setWidth(523);
+                    question.setHeight(ratio * question.getHeight());
+                }
+
+                if (question.getHeight() > 360) {
+                    ratio = 360 / question.getHeight();
+                    question.setWidth(ratio * question.getWidth());
+                    question.setHeight(360);
+                }
+
+                if (question.getResizedMode() == 0) {
+                    // Small
+                    ratio = 0.4f;
+                } else if (question.getResizedMode() == 1) {
+                    // Medium
+                        ratio = 0.7f;
+                } else if (question.getResizedMode() == 2) {
+                    // High
+                    ratio = 1;
+                }
+                question.setWidth(question.getWidth() * ratio);
+                question.setHeight(question.getHeight() * ratio);
+
+                System.out.println(question.getWidth());
+                System.out.println(question.getHeight());
+
                 image.scaleAbsolute(question.getWidth(), question.getHeight());
 
                 pQuestion.add(image);

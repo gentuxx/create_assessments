@@ -1,17 +1,18 @@
 package com.pimms.createassessment;
 
-import com.itextpdf.layout.element.Image;
-
-import java.util.ArrayList;
-import java.util.List;
-
 public class Question {
 
     private String _question;
     private String _image;
-    private int _width;
-    private int _height;
-    //private List<String> _answers;
+    /*
+     * -1 = default
+     * 0 : small
+     * 1 : Medium
+     * 2 : High
+     */
+    private int _resizedMode;
+    private float _width;
+    private float _height;
     private String _answer1;
     private String _answer2;
     private String _answer3;
@@ -20,6 +21,7 @@ public class Question {
     public Question() {
         _question = "";
         _image = "";
+        _resizedMode = -1;
         _width = 50;
         _height = 50;
         //_answers = new ArrayList<String>();
@@ -29,10 +31,11 @@ public class Question {
         _answer4 = "";
     }
 
-    public Question(String question, String image, int width, int height, String answer1,
+    public Question(String question, String image, int resizeMode, int width, int height, String answer1,
                     String answer2, String answer3, String answer4) { //List<String> answers) {
         _question = question;
         _image = image;
+        _resizedMode = resizeMode;
         _width = width;
         _height = height;
         _answer1 = answer1;
@@ -58,17 +61,17 @@ public class Question {
         this._image = image;
     }
 
-    public int getWidth() {
+    public float getWidth() {
         return _width;
     }
-    public void setWidth(int width) {
+    public void setWidth(float width) {
         _width = width;
     }
 
-    public int getHeight() {
+    public float getHeight() {
         return _height;
     }
-    public void setHeight(int height) {
+    public void setHeight(float height) {
         _height = height;
     }
 
@@ -101,12 +104,11 @@ public class Question {
         _answer4 = answer4;
     }
 
-    /*
-    public List<String> getAnswers() {
-        return _answers;
+    public int getResizedMode() {
+        return _resizedMode;
     }
 
-    public void addAnswer(String answer) {
-        _answers.add(answer);
-    }*/
+    public void setResizedMode(int resizeMode) {
+        this._resizedMode = resizeMode;
+    }
 }

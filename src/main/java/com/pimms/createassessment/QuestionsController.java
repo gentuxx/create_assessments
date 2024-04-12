@@ -1,13 +1,10 @@
 package com.pimms.createassessment;
 
 
-import com.pimms.createassessment.enums.WindowMode;
-import com.pimms.createassessment.models.Subject;
 import com.pimms.createassessment.util.JsonUtil;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyIntegerProperty;
-import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -86,12 +83,6 @@ public class QuestionsController {
     }
 
     @FXML
-    void onExitButtonClick(ActionEvent event) {
-        Stage stage = (Stage) _tableViewQuestions.getScene().getWindow();
-        stage.close();
-    }
-
-    @FXML
     void onMouseClicked(javafx.scene.input.MouseEvent event) throws IOException {
         if (event.getClickCount() == 2) {
             modifyQuestionWindow();
@@ -154,6 +145,14 @@ public class QuestionsController {
         deleteQuestion();
     }
 
+    @FXML
+    void onExitButtonClick(ActionEvent event) {
+        JsonUtil.addQuestions(_comboBoxSubjects.getSelectionModel().getSelectedItem().toString(),
+                _tableViewQuestions.getItems());
+        Stage stage = (Stage) _tableViewQuestions.getScene().getWindow();
+        stage.close();
+    }
+
     private void hideTableViewHeaders() {
         _tableViewQuestions.widthProperty().addListener(new ChangeListener<Number>() {
             @Override
@@ -179,6 +178,7 @@ public class QuestionsController {
 
         TableColumn subjectCol = new TableColumn("Question");
         TableColumn imageCol = new TableColumn("Image");
+        TableColumn resizedModeCol = new TableColumn("ResizedMode");
         TableColumn widthCol = new TableColumn("Width");
         TableColumn heightCol = new TableColumn("Height");
         TableColumn answer1Col = new TableColumn<>("answer1");
@@ -188,6 +188,7 @@ public class QuestionsController {
 
         subjectCol.setCellValueFactory(new PropertyValueFactory<Question,String>("Question"));
         imageCol.setCellValueFactory(new PropertyValueFactory<Question,String>("Image"));
+        resizedModeCol.setCellValueFactory(new PropertyValueFactory<Question,String>("ResizedMode"));
         widthCol.setCellValueFactory(new PropertyValueFactory<Question,String>("Width"));
         heightCol.setCellValueFactory(new PropertyValueFactory<Question,String>("Height"));
         answer1Col.setCellValueFactory(new PropertyValueFactory<Question,String>("answer1"));
@@ -196,6 +197,7 @@ public class QuestionsController {
         answer4Col.setCellValueFactory(new PropertyValueFactory<Question,String>("answer4"));
 
         imageCol.setVisible(false);
+        resizedModeCol.setVisible(false);
         widthCol.setVisible(false);
         heightCol.setVisible(false);
         answer1Col.setVisible(false);
@@ -205,8 +207,8 @@ public class QuestionsController {
 
         subjectCol.setMinWidth(_tableViewQuestions.getWidth() -2);
 
-        _tableViewQuestions.getColumns().addAll(subjectCol, imageCol, widthCol, heightCol, answer1Col, answer2Col,
-                answer3Col, answer4Col);
+        _tableViewQuestions.getColumns().addAll(subjectCol, imageCol, resizedModeCol, widthCol, heightCol,
+                answer1Col, answer2Col, answer3Col, answer4Col);
     }
 
     private void fillTableViewQuestions() {
@@ -238,6 +240,7 @@ public class QuestionsController {
 
             question.setQuestion(_tableViewQuestions.getSelectionModel().getSelectedItem().getQuestion());
             question.setImage(_tableViewQuestions.getSelectionModel().getSelectedItem().getImage());
+            question.setResizedMode(_tableViewQuestions.getSelectionModel().getSelectedItem().getResizedMode());
             question.setWidth(_tableViewQuestions.getSelectionModel().getSelectedItem().getWidth());
             question.setHeight(_tableViewQuestions.getSelectionModel().getSelectedItem().getHeight());
             question.setAnswer1(_tableViewQuestions.getSelectionModel().getSelectedItem().getAnswer1());
