@@ -20,7 +20,11 @@ import javafx.stage.Stage;
 
 import org.controlsfx.control.CheckComboBox;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 public class HelloController implements AutoCloseable {
@@ -186,6 +190,47 @@ public class HelloController implements AutoCloseable {
         checkComboBox.getCheckModel().checkAll();
     }
     private void initializeUI() {
+
+        Path currRelativePath = Paths.get("");
+        String currAbsolutePathString = currRelativePath.toAbsolutePath().toString();
+
+        String jarDir = new File(currAbsolutePathString).toString();
+
+        // Create directories if they don't exist
+        // json, results and pictures
+        Path jsonPath = Paths.get(jarDir ,"json");
+
+        if (Files.notExists(jsonPath)) {
+            // Create one !
+            try {
+                Files.createDirectory(jsonPath);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        Path jsonResults = Paths.get(jarDir ,"results");
+
+        if (Files.notExists(jsonResults)) {
+            // Create one !
+            try {
+                Files.createDirectory(jsonResults);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        Path jsonPictures = Paths.get(jarDir ,"pictures");
+
+        if (Files.notExists(jsonPictures)) {
+            // Create one !
+            try {
+                Files.createDirectory(jsonPictures);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
         btnGenerate.setVisible(true);
     }
 }

@@ -20,6 +20,7 @@ import com.itextpdf.layout.borders.SolidBorder;
 import com.itextpdf.layout.element.*;
 import com.itextpdf.layout.properties.TextAlignment;
 import com.itextpdf.layout.properties.VerticalAlignment;
+import com.pimms.createassessment.util.JsonUtil;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -170,10 +171,6 @@ public class GeneratorEngine {
                 Questions questions = new Questions();
 
                 questions.loadFromJson("json/questions_" + jsonName + ".json");
-
-                if (questions.getQuestions().size() == 0) {
-                    continue;
-                }
 
                 // New page
                 document.add(new AreaBreak());

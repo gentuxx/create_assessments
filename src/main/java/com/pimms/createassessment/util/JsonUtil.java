@@ -114,7 +114,6 @@ public class JsonUtil {
             //URI uri = ClassLoader.getSystemResource("com/pimms/createassessment/").toURI();
             //String mainPath = Paths.get(uri).toString();
             Path path = Paths.get(jarDir ,"json/subjects.json");
-            System.out.println(path.toString());
 
             String json = Files.readString(path);
 
