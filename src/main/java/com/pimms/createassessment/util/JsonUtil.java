@@ -19,15 +19,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class JsonUtil {
+
+    static Path currRelativePath = Paths.get("");
+    static String currAbsolutePathString = currRelativePath.toAbsolutePath().toString() + "/";
+    static String jarDir = new File(currAbsolutePathString) + "/";
+
     public static List<Subject> getSubjectsFromJsonFile() {
 
         JSONParser parser = new JSONParser();
         List<Subject> subjects = new ArrayList<Subject>();
 
         try {
-            URI uri = ClassLoader.getSystemResource("com/pimms/createassessment/").toURI();
-            String mainPath = Paths.get(uri).toString();
-            Path path = Paths.get(mainPath ,"json/subjects.json");
+            //URI uri = ClassLoader.getSystemResource("com/pimms/createassessment/").toURI();
+            //String mainPath = Paths.get(uri).toString();
+
+            Path path = Paths.get(jarDir ,"json/subjects.json");
 
             String json = Files.readString(path);
 
@@ -64,14 +70,14 @@ public class JsonUtil {
         JSONParser parser = new JSONParser();
 
         try {
-            URI uri = ClassLoader.getSystemResource("com/pimms/createassessment/").toURI();
-            String mainPath = Paths.get(uri).toString();
-            Path filePath = Paths.get(mainPath ,"json/questions_"
+            //URI uri = ClassLoader.getSystemResource("com/pimms/createassessment/").toURI();
+            //String mainPath = Paths.get(uri).toString();
+            Path filePath = Paths.get(jarDir ,"json/questions_"
                     + subject.replaceAll("\s", "_") + ".json");
 
             Files.deleteIfExists(filePath);
 
-            Path subjectPath = Paths.get(mainPath ,"json/subjects.json");
+            Path subjectPath = Paths.get(jarDir ,"json/subjects.json");
             String json = Files.readString(subjectPath);
 
             Object obj = parser.parse(json);
@@ -82,7 +88,7 @@ public class JsonUtil {
 
             jsonSubjects.remove(subject);
 
-            FileWriter fw = new FileWriter(Subjects.class.getResource("json/subjects.json").getFile());
+            FileWriter fw = new FileWriter(subjectPath.toString());
             fw.write(jsonObject.toJSONString());
 
             fw.flush();
@@ -105,9 +111,10 @@ public class JsonUtil {
                 return false;
             }
 
-            URI uri = ClassLoader.getSystemResource("com/pimms/createassessment/").toURI();
-            String mainPath = Paths.get(uri).toString();
-            Path path = Paths.get(mainPath ,"json/subjects.json");
+            //URI uri = ClassLoader.getSystemResource("com/pimms/createassessment/").toURI();
+            //String mainPath = Paths.get(uri).toString();
+            Path path = Paths.get(jarDir ,"json/subjects.json");
+            System.out.println(path.toString());
 
             String json = Files.readString(path);
 
@@ -119,7 +126,7 @@ public class JsonUtil {
 
             jsonSubjects.addLast(subject);
 
-            FileWriter fw = new FileWriter(Subjects.class.getResource("json/subjects.json").getFile());
+            FileWriter fw = new FileWriter(path.toString());
             fw.write(jsonObject.toJSONString());
 
             fw.flush();
@@ -135,20 +142,48 @@ public class JsonUtil {
             String jsonName = subject.toLowerCase();
             jsonName = jsonName.replaceAll("\s", "_");
 
-            String jsonPath = String.valueOf(GeneratorEngine.class.getResource("json/").getFile());
+            String jsonPath = jarDir + "json";
 
-            File file = new File(jsonPath + "questions_" + jsonName + ".json");
+            //String.valueOf(GeneratorEngine.class.getResource("json/").getFile());
+
+            File file = new File(jsonPath + "/questions_" + jsonName + ".json");
             if (!file.createNewFile()) {
                 // TODO
             }
             // Writing parts of the JSON file
-            FileWriter fw = new FileWriter(Subjects.class.getResource(
-                    "json/questions_" + jsonName + ".json").getFile());
+            FileWriter fw = new FileWriter(jsonPath + "/questions_" + jsonName + ".json");
 
             JSONObject jsonObject = new JSONObject();
             JSONArray questionsArray = new JSONArray();
 
             jsonObject.put("questions", questionsArray);
+
+            fw.write(jsonObject.toJSONString());
+
+            fw.flush();
+            fw.close();
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return true;
+    }
+
+    public static boolean createSubjectsJson() {
+        try {
+            String jsonPath = jarDir + "json";
+
+            File file = new File(jsonPath + "/subjects.json");
+            if (!file.createNewFile()) {
+                // TODO
+            }
+            // Writing parts of the JSON file
+            FileWriter fw = new FileWriter(jsonPath + "/subjects.json");
+
+            JSONObject jsonObject = new JSONObject();
+            JSONArray questionsArray = new JSONArray();
+
+            jsonObject.put("subjects", questionsArray);
 
             fw.write(jsonObject.toJSONString());
 
@@ -172,12 +207,11 @@ public class JsonUtil {
         // TODO : Check if the subject already exists
 
         // First modify the subject in subjects.json
-        URI uri = null;
         try {
-            uri = ClassLoader.getSystemResource("com/pimms/createassessment/").toURI();
+            //URI uri = ClassLoader.getSystemResource("com/pimms/createassessment/").toURI();
 
-            String mainPath = Paths.get(uri).toString();
-            Path path = Paths.get(mainPath ,"json/subjects.json");
+            //String mainPath = Paths.get(uri).toString();
+            Path path = Paths.get(jarDir ,"json/subjects.json");
 
             String json = Files.readString(path);
 
@@ -187,15 +221,15 @@ public class JsonUtil {
 
             JSONArray jsonSubjects = (JSONArray) jsonObject.get("subjects");
 
-            Path questionsPathBefore = Paths.get(mainPath ,"json/questions_" + subjectToRename.toLowerCase().replaceAll("\s", "_") + ".json");
-            Path questionsPathRenamed = Paths.get(mainPath ,"json/questions_" + newSubjectName.toLowerCase().replaceAll("\s", "_") + ".json");
+            Path questionsPathBefore = Paths.get(jarDir ,"json/questions_" + subjectToRename.toLowerCase().replaceAll("\s", "_") + ".json");
+            Path questionsPathRenamed = Paths.get(jarDir ,"json/questions_" + newSubjectName.toLowerCase().replaceAll("\s", "_") + ".json");
 
             Files.move(questionsPathBefore, questionsPathRenamed);
 
             jsonSubjects.remove(subjectToRename);
             jsonSubjects.addLast(newSubjectName);
 
-            FileWriter fw = new FileWriter(Subjects.class.getResource("json/subjects.json").getFile());
+            FileWriter fw = new FileWriter(path.toString());
             fw.write(jsonObject.toJSONString());
 
             fw.flush();
@@ -215,10 +249,10 @@ public class JsonUtil {
         JSONParser parser = new JSONParser();
 
         try {
-            URI uri = ClassLoader.getSystemResource("com/pimms/createassessment/").toURI();
-            String mainPath = Paths.get(uri).toString();
+            //URI uri = ClassLoader.getSystemResource("com/pimms/createassessment/").toURI();
+            //String mainPath = Paths.get(uri).toString();
 
-            Path subjectPath = Paths.get(mainPath ,"json/subjects.json");
+            Path subjectPath = Paths.get(jarDir ,"json/subjects.json");
             String json = Files.readString(subjectPath);
 
             Object obj = parser.parse(json);
@@ -229,7 +263,7 @@ public class JsonUtil {
 
             jsonSubjects.removeAll(jsonSubjects);
 
-            FileWriter fw = new FileWriter(Subjects.class.getResource("json/subjects.json").getFile());
+            FileWriter fw = new FileWriter(subjectPath.toString());
             fw.write(jsonObject.toJSONString());
 
             fw.flush();
@@ -244,9 +278,10 @@ public class JsonUtil {
 
         // Writing parts of the JSON file
         try {
-            FileWriter fw = new FileWriter(Subjects.class.getResource(
-                    "json/questions_" + subject.toLowerCase().replaceAll(
-                            "\s", "_") + ".json").getFile(), false);
+            Path subjectPath = Paths.get(jarDir ,"json/questions_" + subject.toLowerCase().replaceAll(
+                    "\s", "_") + ".json");
+
+            FileWriter fw = new FileWriter(subjectPath.toString(), false);
 
             // Erase all content of the json file
             PrintWriter pw = new PrintWriter(fw, false);
@@ -301,9 +336,9 @@ public class JsonUtil {
                 return false;
             }
 
-            URI uri = ClassLoader.getSystemResource("com/pimms/createassessment/").toURI();
-            String mainPath = Paths.get(uri).toString();
-            Path path = Paths.get(mainPath ,"json/subjects.json");
+            //URI uri = ClassLoader.getSystemResource("com/pimms/createassessment/").toURI();
+            //String mainPath = Paths.get(uri).toString();
+            Path path = Paths.get(jarDir ,"json/subjects.json");
 
             String json = Files.readString(path);
 
@@ -315,7 +350,7 @@ public class JsonUtil {
 
             jsonSubjects.addLast(subject);
 
-            FileWriter fw = new FileWriter(Subjects.class.getResource("json/subjects.json").getFile());
+            FileWriter fw = new FileWriter(path.toString());
             fw.write(jsonObject.toJSONString());
 
             fw.flush();
@@ -339,9 +374,9 @@ public class JsonUtil {
                 return null;
             }
 
-            URI uri = ClassLoader.getSystemResource("com/pimms/createassessment/").toURI();
-            String mainPath = Paths.get(uri).toString();
-            Path path = Paths.get(mainPath ,"json/questions_" + subject.toLowerCase().replaceAll("\s", "_") + ".json");
+            //URI uri = ClassLoader.getSystemResource("com/pimms/createassessment/").toURI();
+            //String mainPath = Paths.get(uri).toString();
+            Path path = Paths.get(jarDir ,"json/questions_" + subject.toLowerCase().replaceAll("\s", "_") + ".json");
 
             String json = Files.readString(path);
 

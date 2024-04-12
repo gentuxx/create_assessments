@@ -14,6 +14,8 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class QuestionController {
 
@@ -75,6 +77,13 @@ public class QuestionController {
 
         fileChooser.getExtensionFilters().add(
                 new FileChooser.ExtensionFilter("Fichiers images", "*.jpg", "*.jpeg", "*.png"));
+
+        Path currRelativePath = Paths.get("");
+        String currAbsolutePathString = currRelativePath.toAbsolutePath().toString();
+
+        String dest = new File(currAbsolutePathString) + "/pictures/";
+
+        fileChooser.setInitialDirectory(new File(dest));
 
         File selectedFile = fileChooser.showOpenDialog(_stage);
 

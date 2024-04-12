@@ -4,6 +4,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+import java.io.File;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -33,9 +34,14 @@ public class Questions {
         JSONParser parser = new JSONParser();
 
         try {
-            URI uri = ClassLoader.getSystemResource("com/pimms/createassessment/").toURI();
-            String mainPath = Paths.get(uri).toString();
-            Path path = Paths.get(mainPath ,pathname);
+
+            //URI uri = ClassLoader.getSystemResource("com/pimms/createassessment/").toURI();
+            //String mainPath = Paths.get(uri).toString();
+
+            //Path path = Paths.get(mainPath, pathname);
+            Path currRelativePath = Paths.get("");
+            String currAbsolutePathString = currRelativePath.toAbsolutePath().toString();
+            Path path = Paths.get(new File(currAbsolutePathString) + "/",pathname);
 
             String json = Files.readString(path);
 

@@ -1,9 +1,11 @@
 package com.pimms.createassessment;
 
+import com.pimms.createassessment.util.JsonUtil;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+import java.io.File;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -30,9 +32,16 @@ public class Subjects {
         JSONParser parser = new JSONParser();
 
         try {
-            URI uri = ClassLoader.getSystemResource("com/pimms/createassessment/").toURI();
-            String mainPath = Paths.get(uri).toString();
-            Path path = Paths.get(mainPath ,"json/subjects.json");
+            Path currRelativePath = Paths.get("");
+            String currAbsolutePathString = currRelativePath.toAbsolutePath().toString();
+            String jarDir = new File(currAbsolutePathString).toString();
+
+            Path path = Paths.get(jarDir ,"json/subjects.json");
+
+            if (Files.notExists(path)) {
+                // Create one !
+                JsonUtil.createSubjectsJson();
+            }
 
             String json = Files.readString(path);
 

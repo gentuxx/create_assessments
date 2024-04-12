@@ -264,8 +264,7 @@ public class QuestionsController {
                 return;
             }
 
-            int index = _tableViewQuestions.getSelectionModel().getSelectedIndex();
-            _tableViewQuestions.getItems().remove(index);
+            _tableViewQuestions.getItems().remove(selectedIndex);
 
             question = controller.getQuestion();
 
@@ -273,7 +272,7 @@ public class QuestionsController {
             for (Question q : _tableViewQuestions.getItems()) {
                 merged.add(q);
             }
-            merged.add(index, question);
+            merged.add(selectedIndex, question);
 
             ObservableList<Question> data = FXCollections.observableArrayList(merged);
             _tableViewQuestions.setItems(data);
@@ -281,6 +280,8 @@ public class QuestionsController {
             // Write again the json file of the named subject in combobox
             JsonUtil.addQuestions(_comboBoxSubjects.getSelectionModel().getSelectedItem().toString(),
                     _tableViewQuestions.getItems());
+
+            _tableViewQuestions.getSelectionModel().select(selectedIndex);
 
         } catch (Exception e) {
             throw new RuntimeException(e);

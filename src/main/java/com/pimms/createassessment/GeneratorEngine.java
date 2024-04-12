@@ -29,6 +29,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,6 +56,10 @@ public class GeneratorEngine {
 
     public void addSubject(String subject) {
         _subjects.add(subject);
+    }
+
+    public void clearSubjects() {
+        _subjects.clear();
     }
 
     public List<String> getSubjects() {
@@ -86,7 +91,11 @@ public class GeneratorEngine {
 
     public void generatePdf() {
 
-        String dest = "results/";
+        Path currRelativePath = Paths.get("");
+        String currAbsolutePathString = currRelativePath.toAbsolutePath().toString();
+
+        String dest = new File(currAbsolutePathString) + "/results/";
+
         String filename = _lastname + "_" + _firstname;
 
         if (_subjects.isEmpty()) {
@@ -120,7 +129,7 @@ public class GeneratorEngine {
 
             pdf.addEventHandler(PdfDocumentEvent.END_PAGE, new ParagraphEventHandler());
 
-            String imageAfnicPath = "src/main/resources/com/pimms/createassessment/pictures/afnic.jpg";
+            String imageAfnicPath = String.valueOf(HelloApplication.class.getResource("pictures/afnic.jpg"));
             ImageData dataAfnic = ImageDataFactory.create(imageAfnicPath);
             Image imageAfnic = new Image(dataAfnic);
             imageAfnic.setFixedPosition(36, 760);
@@ -128,7 +137,7 @@ public class GeneratorEngine {
             imageAfnic.setMarginBottom(15f);
             document.add(imageAfnic);
 
-            String imagePimmsPath = "src/main/resources/com/pimms/createassessment/pictures/pimms.png";
+            String imagePimmsPath = String.valueOf(HelloApplication.class.getResource("pictures/pimms.png"));
             ImageData dataPimms = ImageDataFactory.create(imagePimmsPath);
             Image imagePimms = new Image(dataPimms);
             imagePimms.setFixedPosition(388, 740);
@@ -293,16 +302,13 @@ public class GeneratorEngine {
                     ratio = 0.4f;
                 } else if (question.getResizedMode() == 1) {
                     // Medium
-                        ratio = 0.7f;
+                    ratio = 0.7f;
                 } else if (question.getResizedMode() == 2) {
                     // High
-                    ratio = 1;
+                    ratio = 1f;
                 }
                 question.setWidth(question.getWidth() * ratio);
                 question.setHeight(question.getHeight() * ratio);
-
-                System.out.println(question.getWidth());
-                System.out.println(question.getHeight());
 
                 image.scaleAbsolute(question.getWidth(), question.getHeight());
 

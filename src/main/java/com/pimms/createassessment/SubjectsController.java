@@ -205,7 +205,6 @@ public class SubjectsController {
 
             Stage stage = new Stage();
 
-            stage.setTitle("Ajout d'une thématique");
             stage.initOwner((Stage) _tableViewSubjects.getScene().getWindow());
             stage.initModality(Modality.WINDOW_MODAL);
             stage.setResizable(false);

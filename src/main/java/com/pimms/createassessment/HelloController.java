@@ -137,18 +137,6 @@ public class HelloController implements AutoCloseable {
             controller.setStage(stage);
 
             stage.showAndWait();
-
-            // Writes the subject.json with the new order
-            // TODO : Write the new questions order if it has changed
-            //List<Subject> subjects = controller.getSubjects();
-
-            //JsonUtil.deleteSubjectsInSubjectJson();
-
-            //for (Subject s : subjects) {
-            //    JsonUtil.addSubjectInSubjectJson(s.getSujet());
-            //}
-
-            //refreshCombo();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -162,6 +150,8 @@ public class HelloController implements AutoCloseable {
     @FXML
     void onGenerateButtonClick(ActionEvent event) {
         ObservableList list = checkComboBox.getCheckModel().getCheckedItems();
+
+        _engine.clearSubjects();
 
         // Generate pdf from values checked
         for (Object element : list) {
