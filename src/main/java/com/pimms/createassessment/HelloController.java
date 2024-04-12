@@ -9,6 +9,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
@@ -26,6 +27,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+
+import static com.pimms.createassessment.util.JsonUtil.getSubjectsFromJsonFile;
 
 public class HelloController implements AutoCloseable {
 
@@ -124,6 +127,16 @@ public class HelloController implements AutoCloseable {
 
     @FXML
     void onMenuItemQuestions(ActionEvent event) {
+
+        // If there are no subjects, display an error message
+        if (getSubjectsFromJsonFile().isEmpty()) {
+            Alert errorAlert = new Alert(Alert.AlertType.WARNING);
+            errorAlert.setHeaderText("Pas de thématiques existantes !");
+            errorAlert.setContentText("Veuillez créer au moins une thématique pour pouvoir ajouter des questions.");
+            errorAlert.showAndWait();
+
+            return;
+        }
 
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("questions-view.fxml"));
