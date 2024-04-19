@@ -200,7 +200,8 @@ public class HelloController implements AutoCloseable {
         _subjects.loadFromJson();
         checkComboBox.getItems().addAll(_subjects.getSubjects());
 
-        checkComboBox.getCheckModel().checkAll();
+        //checkComboBox.getCheckModel().checkAll();
+        checkComboBox.getCheckModel().clearChecks();
     }
     private void initializeUI() {
 
@@ -211,7 +212,20 @@ public class HelloController implements AutoCloseable {
 
         // Create directories if they don't exist
         // json, results and pictures
-        Path jsonPath = Paths.get(jarDir ,"json");
+        Path settingsPath = Paths.get(jarDir ,".settings");
+
+        if (Files.notExists(settingsPath)) {
+            // Create one !
+            try {
+                Files.createDirectory(settingsPath);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        // Create directories if they don't exist
+        // json, results and pictures
+        Path jsonPath = Paths.get(jarDir ,".settings/json");
 
         if (Files.notExists(jsonPath)) {
             // Create one !
@@ -222,7 +236,7 @@ public class HelloController implements AutoCloseable {
             }
         }
 
-        Path jsonResults = Paths.get(jarDir ,"results");
+        Path jsonResults = Paths.get(jarDir ,"resultats");
 
         if (Files.notExists(jsonResults)) {
             // Create one !
@@ -233,7 +247,7 @@ public class HelloController implements AutoCloseable {
             }
         }
 
-        Path jsonPictures = Paths.get(jarDir ,"pictures");
+        Path jsonPictures = Paths.get(jarDir ,"images");
 
         if (Files.notExists(jsonPictures)) {
             // Create one !

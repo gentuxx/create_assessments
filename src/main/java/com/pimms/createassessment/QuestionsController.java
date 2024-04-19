@@ -112,6 +112,10 @@ public class QuestionsController {
             controller.setStage(stage);
             stage.showAndWait();
 
+            if (controller.getQuestion() == null) {
+                return;
+            }
+
             _tableViewQuestions.getItems().clear();
 
             // TODO : Add question to tableview and rewrite json file

@@ -41,7 +41,9 @@ public class Questions {
             //Path path = Paths.get(mainPath, pathname);
             Path currRelativePath = Paths.get("");
             String currAbsolutePathString = currRelativePath.toAbsolutePath().toString();
-            Path path = Paths.get(new File(currAbsolutePathString) + "/",pathname);
+            Path path = Paths.get(new File(currAbsolutePathString) + "/.settings/", pathname);
+
+            System.out.println(path.toAbsolutePath().toString());
 
             String json = Files.readString(path);
 

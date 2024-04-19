@@ -36,7 +36,7 @@ public class Subjects {
             String currAbsolutePathString = currRelativePath.toAbsolutePath().toString();
             String jarDir = new File(currAbsolutePathString).toString();
 
-            Path path = Paths.get(jarDir ,"json/subjects.json");
+            Path path = Paths.get(jarDir ,".settings/json/subjects.json");
 
             if (Files.notExists(path)) {
                 // Create one !

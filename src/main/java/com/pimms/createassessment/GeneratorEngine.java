@@ -95,7 +95,7 @@ public class GeneratorEngine {
         Path currRelativePath = Paths.get("");
         String currAbsolutePathString = currRelativePath.toAbsolutePath().toString();
 
-        String dest = new File(currAbsolutePathString) + "/results/";
+        String dest = new File(currAbsolutePathString) + "/resultats/";
 
         String filename = _lastname + "_" + _firstname;
 

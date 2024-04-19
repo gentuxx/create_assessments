@@ -81,7 +81,7 @@ public class QuestionController {
         Path currRelativePath = Paths.get("");
         String currAbsolutePathString = currRelativePath.toAbsolutePath().toString();
 
-        String dest = new File(currAbsolutePathString) + "/pictures/";
+        String dest = new File(currAbsolutePathString) + "/images/";
 
         fileChooser.setInitialDirectory(new File(dest));
 
