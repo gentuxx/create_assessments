@@ -44,8 +44,7 @@ public class JsonUtil {
             JSONArray jsonSubjects = (JSONArray) jsonObject.get("subjects");
 
             // Iterates over subjects
-            for (int i = 0, size = jsonSubjects.size(); i < size; i++)
-            {
+            for (int i = 0, size = jsonSubjects.size(); i < size; i++) {
                 Question question = new Question();
 
                 String element = (String) jsonSubjects.get(i);

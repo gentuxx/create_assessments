@@ -5,16 +5,22 @@ import com.pimms.createassessment.util.JsonUtil;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Point2D;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.stage.PopupWindow;
 import javafx.stage.Stage;
 
 public class SubjectController {
 
     private Stage _stage;
     private WindowMode _windowMode;
+    private Tooltip _tooltip;
     String _subjectFromSubjectsController;
 
     @FXML
@@ -53,6 +59,26 @@ public class SubjectController {
         }
     }
 
+    /*
+    @FXML
+    void onSubjectKeyTyped(KeyEvent event) {
+        String character = hasForbiddenCharacter();
+
+        if (character.isEmpty()) {
+            _tooltip.hide();
+            return;
+        }
+        Point2D point = tfSubject.localToScene(0.0, 0.0);
+        _tooltip = new Tooltip("Caractère non autorisé : « " + character + " »");
+        //_tooltip.setX(point.getX());
+        //_tooltip.setY(point.getY());
+        //_tooltip.setX(tfSubject.getBoundsInParent().getCenterX());
+        //_tooltip.setY(tfSubject.getBoundsInParent().getCenterY());
+        //_tooltip.show(this.getStage());
+        System.out.println("X : " + point.getX());
+        System.out.println("Y : " + point.getY());
+    }*/
+
     private void closeWindow() {
         Stage stage = (Stage) _stage.getScene().getWindow();
         stage.close();
@@ -74,6 +100,16 @@ public class SubjectController {
 
     private void validation() {
         String subject = tfSubject.getText().trim();
+        String forbiddenString = hasForbiddenCharacter();
+
+        if (!forbiddenString.isBlank()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Caractère non autorisé dans la thématique « "
+                    + forbiddenString + " »", ButtonType.OK);
+
+            alert.showAndWait();
+
+            return;
+        }
 
         if (subject.trim().equals(_subjectFromSubjectsController)) {
             _stage.close();
@@ -89,6 +125,19 @@ public class SubjectController {
             return;
         }
         _stage.close();
+    }
+
+    private String hasForbiddenCharacter() {
+        String[] forbiddenCharacters = {"<", ">", ":", "\"", "/", "\\", "|", "?", "*"};
+        String forbiddenCharacterReturn = "";
+
+        for (String character : forbiddenCharacters) {
+            if (tfSubject.getText().trim().contains(character)) {
+                forbiddenCharacterReturn = character;
+                break;
+            }
+        }
+        return forbiddenCharacterReturn;
     }
 
     public Stage getStage() {
